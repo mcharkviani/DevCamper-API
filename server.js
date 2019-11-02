@@ -7,6 +7,12 @@ const errorHandler = require('./middleware/error');
 const fileupload = require('express-fileupload');
 const path = require('path');
 const cookieParser = require('cookie-parser');
+const mongoSanitize = require('express-mongo-sanitize');
+const helmet = require('helmet');
+const xss = require('xss-clean');
+const rateLimit = require('express-rate-limit');
+const hpp = require('hpp');
+const cors = require('cors');
 
 // Load env vars
 dotenv.config({ path: './config/config.env' });
@@ -21,6 +27,31 @@ app.use(express.json());
 
 // Cookie Parser
 app.use(cookieParser());
+
+// ************************* API Security *************************
+// Sanitize data. For example, "email": {"gt": ""} and password correctly
+app.use(mongoSanitize());
+
+// Set security headers
+app.use(helmet());
+
+// Prevenet XSS attacks
+app.use(xss());
+
+// Rate limiting
+const limiter = rateLimit({
+  windowMs: 10 * 60 * 1000, // 10mins
+  max: 100
+});
+app.use(limiter);
+
+// Prevent http param pollution
+app.use(hpp());
+
+// Enable CORS. For example, Front-End APP on different domain will be able to communicate with this API.
+app.use(cors());
+
+// *****************************************************************
 
 // Dev logging middleware
 if (process.env.NODE_ENV === 'development') {
