@@ -13,7 +13,7 @@ const errorHandler = (err, req, res, next) => {
   console.log(err.name);
 
   if (err.name === 'CastError') {
-    const message = `Bootcamp not found with id of ${req.params.id} (It's not formatted ID)`;
+    const message = `Resource not found with id of ${req.params.id} (It's not formatted ID)`;
     error = new ErrorResponse(message, 404);
   }
 

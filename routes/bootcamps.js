@@ -16,12 +16,14 @@ const advancedResults = require('../middleware/advancedResults');
 
 // Include other resource routers
 const courseRouter = require('./courses');
+const reviewRouter = require('./reviews');
 
 const { protect, authorize } = require('../middleware/auth');
 
 // Re-route into other resource routers
 // გადაამისამართებს კურსების ურლ-ზე
 router.use('/:bootcampId/courses', courseRouter);
+router.use('/:bootcampId/reviews', reviewRouter);
 
 router.route('/radius/:zipcode/:distance').get(getBootcampsInRadius);
 
